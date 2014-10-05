@@ -8,6 +8,7 @@ Usage:
 
 import json
 import sys
+import random
 
 
 class CompleteDeck:
@@ -22,32 +23,31 @@ class CompleteDeck:
         return "Deck with %d cards each with %d words" % (self.num_cards,self.num_words)
 
 
-    def text_setup(self):
+    def card_setup(self):
         print """
             /Times-Roman findfont
-            32 scalefont
+            28 scalefont
             setfont
+            300 500 translate
         """
 
 
-    def render_word(self, word, position, number):
-        print """100 200 translate
-            45 rotate
-            newpath
-            0 0 moveto
-            (%s) true charpath
-            0.5 setlinewidth
-            0.4 setgray
-            stroke
-        """ % word
+    def render_word(self, word, position):
+        print """
+            %.0f rotate
+            0 -80 translate
+            %d 0 moveto
+            (%s) show
+            0 80 translate
+        """ % (360/self.num_words, len(word)*(-6), word)
 
 
     def render_card(self,n):
         card = self.cards[n]
         print "%%%% Card= %s" % str(card)
-        self.text_setup()
-        for word in card:
-            self.render_word(word, 0, 0)
+        self.card_setup()
+        for idx, word in enumerate(card):
+            self.render_word(word, idx)
 
 
 def ps_intro():
@@ -66,6 +66,6 @@ if __name__ == "__main__":
 
     deck = CompleteDeck(fn)
     ps_intro()
-    deck.render_card(0)
+    deck.render_card(random.randint(0,deck.num_cards-1))
     ps_closer()
 

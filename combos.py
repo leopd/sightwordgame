@@ -30,11 +30,15 @@ class ProgressIndicator:
         self._last = self._start - howoften*0.9
         self._howoften=howoften
         self._msg = msg
+        self._calls = 0
 
     def update(self,n):
+        self._calls += 1
+        if self._calls % 100 != 0:
+            return
         if time.time() - self._last >= self._howoften:
             howlong = time.time() - self._start
-            print "After %.1fs %s: %d" % (howlong, self._msg, n)
+            print "After %.1fs, %d calls, %s: %d" % (howlong, self._calls, self._msg, n)
             self._last = time.time()
 
 
@@ -57,24 +61,31 @@ def find_card_pairs(words, words_per_card):
     combos = subsets_of_size(words,words_per_card)
     print "Num of %d word combos: %d" % (words_per_card, len(combos))
 
-    candidates = Set()
+    deck = Set()
 
+    def can_use(card):
+        for card2 in deck:
+            both = card.intersection(card2)
+            if len(both) != 1:
+                return False
+        return True
+
+    progress = ProgressIndicator("deck size")
     for card in combos:
-        if len(candidates) == 0:
-            candidates.add(card)
-    
-    pairs = subsets_of_size(combos,2,True)
-    n=0
-    progress = ProgressIndicator("pairs seen so far")
-    last = time.time()
-    for pair in pairs:
-        n += 1
-        progress.update(n)
-    print "Found %d pairs total" % n
+        if len(deck) == 0:
+            deck.add(card)
+            next
+        if can_use(card):
+            deck.add(card)
+        progress.update( len(deck ) )
+
+    return deck
 
 
 if __name__ == "__main__":
     words = Wordlist('wordlist.txt')
-    find_card_pairs(words.words, 4)
+    deck = find_card_pairs(words.words, 6)
+    print "Deck size: %d" % len(deck)
+    print deck
 
 

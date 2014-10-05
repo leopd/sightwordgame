@@ -30,6 +30,8 @@ class Wordlist:
 
 if __name__ == "__main__":
     words = Wordlist('wordlist.txt')
-    print words.subsets(2)
+    for n in range(1,7):
+        subset = words.subsets(n)
+        print "Num of %d word combos: %d" % (n, len(subset))
 
 

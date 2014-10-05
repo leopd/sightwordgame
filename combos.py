@@ -23,6 +23,21 @@ class Wordlist:
             print word
 
 
+class ProgressIndicator:
+
+    def __init__(self, msg="Update", howoften=5):
+        self._start = time.time()
+        self._last = self._start - howoften*0.9
+        self._howoften=howoften
+        self._msg = msg
+
+    def update(self,n):
+        if time.time() - self._last >= self._howoften:
+            howlong = time.time() - self._start
+            print "After %.1fs %s: %d" % (howlong, self._msg, n)
+            self._last = time.time()
+
+
 def subsets_of_size(input_set, size, as_iter=False):
     """Returns all possible sub-sets of length size
     """
@@ -41,21 +56,25 @@ def find_card_pairs(words, words_per_card):
     print "Finding all possible combos..."
     combos = subsets_of_size(words,words_per_card)
     print "Num of %d word combos: %d" % (words_per_card, len(combos))
+
+    candidates = Set()
+
+    for card in combos:
+        if len(candidates) == 0:
+            candidates.add(card)
     
     pairs = subsets_of_size(combos,2,True)
     n=0
+    progress = ProgressIndicator("pairs seen so far")
     last = time.time()
     for pair in pairs:
         n += 1
-        if n%1000 == 1:
-            if time.time() - last > 10:
-                last = time.time()
-                print "Found %d pairs so far" % n
-    print "Found %d pairs" % n
+        progress.update(n)
+    print "Found %d pairs total" % n
 
 
 if __name__ == "__main__":
     words = Wordlist('wordlist.txt')
-    find_card_pairs(words.words, 6)
+    find_card_pairs(words.words, 4)
 
 

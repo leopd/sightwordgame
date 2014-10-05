@@ -24,8 +24,12 @@ class Wordlist:
     def subsets(self, size):
         """Returns all possible sub-sets of length size
         """
-        i = itertools.combinations(self.words,size)
-        return list(i)
+        it = itertools.combinations(self.words,size)
+        # Convert to a set of sets
+        out = Set()
+        for x in it:
+            out.add( Set(x) )
+        return out
         
 
 if __name__ == "__main__":
@@ -33,5 +37,6 @@ if __name__ == "__main__":
     for n in range(1,7):
         subset = words.subsets(n)
         print "Num of %d word combos: %d" % (n, len(subset))
+    combo6 = words.subsets(6)
 
 

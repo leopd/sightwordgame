@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import itertools
 from sets import Set
 
 class Wordlist:
@@ -20,10 +21,15 @@ class Wordlist:
             print word
 
 
+    def subsets(self, size):
+        """Returns all possible sub-sets of length size
+        """
+        i = itertools.combinations(self.words,size)
+        return list(i)
+        
 
 if __name__ == "__main__":
     words = Wordlist('wordlist.txt')
-    words.show()
+    print words.subsets(2)
 
-        
 

@@ -38,7 +38,11 @@ class CompleteDeck:
         y = (self.cards_rendered/2) % 3
         self.center_x = x * 250
         self.center_y = y * -250
-        print "%d %d translate" % (self.center_x, self.center_y)
+        print """%d %d translate
+            newpath
+            0 0 100 0 360 arc
+            stroke
+        """ % (self.center_x, self.center_y)
         self.cards_rendered += 1
 
 

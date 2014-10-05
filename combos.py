@@ -21,22 +21,25 @@ class Wordlist:
             print word
 
 
-    def subsets(self, size):
-        """Returns all possible sub-sets of length size
-        """
-        it = itertools.combinations(self.words,size)
+def subsets_of_size(input_set, size, as_iter=False):
+    """Returns all possible sub-sets of length size
+    """
+    it = itertools.combinations(input_set,size)
+    if as_iter:
+        return it
+    else:
         # Convert to a set of sets
         out = Set()
         for x in it:
             out.add( Set(x) )
         return out
-        
+
 
 if __name__ == "__main__":
     words = Wordlist('wordlist.txt')
     for n in range(1,7):
-        subset = words.subsets(n)
+        subset = subsets_of_size(words.words,n)
         print "Num of %d word combos: %d" % (n, len(subset))
-    combo6 = words.subsets(6)
+    combo6 = subsets_of_size(words.words,6)
 
 

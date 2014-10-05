@@ -2,6 +2,8 @@
 
 import itertools
 from sets import Set
+import time
+
 
 class Wordlist:
 
@@ -35,11 +37,25 @@ def subsets_of_size(input_set, size, as_iter=False):
         return out
 
 
+def find_card_pairs(words, words_per_card):
+    print "Finding all possible combos..."
+    combos = subsets_of_size(words,words_per_card)
+    print "Num of %d word combos: %d" % (words_per_card, len(combos))
+    
+    pairs = subsets_of_size(combos,2,True)
+    n=0
+    last = time.time()
+    for pair in pairs:
+        n += 1
+        if n%1000 == 1:
+            if time.time() - last > 10:
+                last = time.time()
+                print "Found %d pairs so far" % n
+    print "Found %d pairs" % n
+
+
 if __name__ == "__main__":
     words = Wordlist('wordlist.txt')
-    for n in range(1,7):
-        subset = subsets_of_size(words.words,n)
-        print "Num of %d word combos: %d" % (n, len(subset))
-    combo6 = subsets_of_size(words.words,6)
+    find_card_pairs(words.words, 6)
 
 

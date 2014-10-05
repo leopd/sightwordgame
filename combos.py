@@ -125,7 +125,7 @@ if __name__ == "__main__":
     best_deck = None
     while True:
         deck = Deck()
-        deck.find_card_pairs(words.words, 6, True)
+        deck.find_card_pairs(words.words, 5, True)
 
         if ((not best_deck) or (deck.size() > best_deck.size())) and deck.validate():
             print "\nNew best!\n%s" % deck

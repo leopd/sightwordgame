@@ -17,6 +17,15 @@ class CompleteDeck:
         self.cards = json.load(open(fn))
         self.num_cards = len(self.cards)
         self.num_words = len(self.cards[0])
+        self.cards_rendered = 0
+        self.center_x = 0
+        self.center_y = 0
+        print """
+            /Times-Roman findfont
+            28 scalefont
+            setfont
+            200 650 translate
+        """
 
 
     def __repr__(self):
@@ -24,12 +33,13 @@ class CompleteDeck:
 
 
     def card_setup(self):
-        print """
-            /Times-Roman findfont
-            28 scalefont
-            setfont
-            300 500 translate
-        """
+        print "%d %d translate" % (-self.center_x, -self.center_y)
+        x = self.cards_rendered % 2
+        y = (self.cards_rendered/2) % 3
+        self.center_x = x * 250
+        self.center_y = y * -250
+        print "%d %d translate" % (self.center_x, self.center_y)
+        self.cards_rendered += 1
 
 
     def render_word(self, word, position):
@@ -48,6 +58,15 @@ class CompleteDeck:
         self.card_setup()
         for idx, word in enumerate(card):
             self.render_word(word, idx)
+        if self.cards_rendered % 6 == 0:
+            self.next_page()
+
+
+    def next_page(self):
+        print """
+            showpage
+            450 150 translate
+        """
 
 
 def ps_intro():
@@ -66,6 +85,7 @@ if __name__ == "__main__":
 
     deck = CompleteDeck(fn)
     ps_intro()
-    deck.render_card(random.randint(0,deck.num_cards-1))
+    for idx in range(deck.num_cards):
+        deck.render_card(idx)
     ps_closer()
 

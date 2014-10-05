@@ -56,36 +56,43 @@ def subsets_of_size(input_set, size, as_iter=False):
         return out
 
 
-def find_card_pairs(words, words_per_card):
-    print "Finding all possible combos..."
-    combos = subsets_of_size(words,words_per_card)
-    print "Num of %d word combos: %d" % (words_per_card, len(combos))
+class Deck:
+    
+    def __init__(self):
+        self._deck = Set()
 
-    deck = Set()
 
-    def can_use(card):
-        for card2 in deck:
+    def can_use(self, card):
+        for card2 in self._deck:
             both = card.intersection(card2)
             if len(both) != 1:
                 return False
         return True
 
-    progress = ProgressIndicator("deck size")
-    for card in combos:
-        if len(deck) == 0:
-            deck.add(card)
-            next
-        if can_use(card):
-            deck.add(card)
-        progress.update( len(deck ) )
 
-    return deck
+    def find_card_pairs(self, words, words_per_card):
+        print "Finding all possible combos..."
+        combos = subsets_of_size(words,words_per_card)
+        print "Num of %d word combos: %d" % (words_per_card, len(combos))
+
+        progress = ProgressIndicator("deck size")
+        for card in combos:
+            if len(self._deck) == 0:
+                self._deck.add(card)
+                next
+            if self.can_use(card):
+                self._deck.add(card)
+            progress.update( len(self._deck ) )
+
+
+    def __repr__(self):
+        return "Deck size: %d\nDeck=%s" % (len(self._deck), str(self._deck))
 
 
 if __name__ == "__main__":
     words = Wordlist('wordlist.txt')
-    deck = find_card_pairs(words.words, 6)
-    print "Deck size: %d" % len(deck)
+    deck = Deck()
+    deck.find_card_pairs(words.words, 6)
     print deck
 
 

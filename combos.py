@@ -1,13 +1,14 @@
 #!/usr/bin/python
-"""Finds a deck using wordlist.txt
+"""Finds a deck using a wordlist file
 
-Specify number of words per card.
+Specify word list (one word per line) and number of words per card.
 
 Usage:
-    python combos.py 5
+    python combos.py wordlist.txt 5
 
 """
 
+import json
 import itertools
 import random
 from sets import Set
@@ -127,14 +128,23 @@ class Deck:
         return len(self._deck)
 
 
+    def as_json(self):
+        return json.dumps([list(x) for x in self._deck], indent=2)
+
+
+def optimal_deck_size(n):
+    return 1+ n*(n-1)
+
+
 if __name__ == "__main__":
     try:
-        N = int(sys.argv[1])
+        fn = sys.argv[1]
+        N = int(sys.argv[2])
     except:
         print __doc__
         sys.exit(-1)
 
-    words = Wordlist('wordlist.txt')
+    words = Wordlist(fn)
     print "Using %d words" % len(words.words)
 
     best_deck = None
@@ -145,6 +155,10 @@ if __name__ == "__main__":
         if ((not best_deck) or (deck.size() > best_deck.size())) and deck.validate():
             print "\nNew best!\n%s" % deck
             best_deck = deck
+            if deck.size() >= optimal_deck_size(N):
+                print "\n\nOptimal deck!\n"
+                print deck.as_json()
+                sys.exit(0)
         else:
             print "Worse.  Deck size=%d" % deck.size()
 

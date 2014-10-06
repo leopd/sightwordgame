@@ -1,8 +1,17 @@
 #!/usr/bin/python
+"""Finds a deck using wordlist.txt
+
+Specify number of words per card.
+
+Usage:
+    python combos.py 5
+
+"""
 
 import itertools
 import random
 from sets import Set
+import sys
 import time
 
 
@@ -119,13 +128,19 @@ class Deck:
 
 
 if __name__ == "__main__":
+    try:
+        N = int(sys.argv[1])
+    except:
+        print __doc__
+        sys.exit(-1)
+
     words = Wordlist('wordlist.txt')
     print "Using %d words" % len(words.words)
 
     best_deck = None
     while True:
         deck = Deck()
-        deck.find_card_pairs(words.words, 5, True)
+        deck.find_card_pairs(words.words, N, True)
 
         if ((not best_deck) or (deck.size() > best_deck.size())) and deck.validate():
             print "\nNew best!\n%s" % deck

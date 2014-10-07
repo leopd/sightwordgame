@@ -101,10 +101,7 @@ class Deck:
 
 
     def __repr__(self):
-        out = "Deck size: %d\n" % len(self._deck)
-        for card in self._deck:
-            out += str(list(card))
-            out += "\n"
+        out = "Deck size: %d\n%s" % (len(self._deck), self.as_json())
         return out
 
 
@@ -129,7 +126,10 @@ class Deck:
 
 
     def as_json(self):
-        return json.dumps([list(x) for x in self._deck], indent=2)
+        out = "[\n  "
+        out += ",\n  ".join([json.dumps(list(card)) for card in self._deck])
+        out += "\n]"
+        return out
 
 
 def optimal_deck_size(n):
